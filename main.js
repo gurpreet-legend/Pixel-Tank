@@ -2,10 +2,6 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 
-// Clock
-const clock = new THREE.Clock();
-
-
 // Scene
 const scene = new THREE.Scene();
 scene.background = new THREE.Color( 0x48dbfb )
