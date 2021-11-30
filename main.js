@@ -1,64 +1,102 @@
-import * as THREE from 'https://cdn.skypack.dev/three@0.135.0';
+import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
+
+// Clock
+const clock = new THREE.Clock();
+
 
 // Scene
 const scene = new THREE.Scene();
+scene.background = new THREE.Color( 0x48dbfb )
+
 
 // Camera
 const camera = new THREE.PerspectiveCamera( 
-    75, 
+    40, 
     window.innerWidth / window.innerHeight, 
-    0.1, 
+    1, 
     1000 
   ); // props(viewing frustum) : FOV, Aspect ratio, near plane, far plane
+camera.position.set( 0, 2, 5);
+
 
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
-  // canvas: canvas,
-  // alpha: true //to make threeJS background transparent
+  antialias: true, // to minimize the distortions while rendering our 3D model
+  alpha: true //to make threeJS background transparent
 });
 renderer.setSize( innerWidth, innerHeight );
+renderer.setPixelRatio(devicePixelRatio);
+renderer.outputEncoding = THREE.sRGBEncoding  //////AMAZING THING
 document.body.appendChild( renderer.domElement );
 
-// console.log(scene)
-// console.log(camera)
-// console.log(renderer)
 
 
-// 3D Model
-const geometry = new THREE.SphereGeometry( 1, 40, 40 );
-const material = new THREE.MeshBasicMaterial();
-material.color = new THREE.Color(0x00ff00)
-material.metalness = 1;
-material.wireframe = true;
-const mesh = new THREE.Mesh( geometry, material );
-scene.add( mesh ); // adding our mesh into the scene
 
-// console.log(geometry)
-// console.log(material)
-// console.log(mesh)
+//Orbit controls
+const controls = new OrbitControls( camera, renderer.domElement );
+controls.update();
+// controls.enablePan = false;
+controls.enableDamping = true;
+controls.dampingFactor = 0.25;
+controls.enableZoom = true;
 
-// Lights
 
-//Light 1
-const pointLight = new THREE.PointLight(0xffffff, 1)
-pointLight.position.x = 2
-pointLight.position.y = 3
-pointLight.position.z = 4
-scene.add(pointLight)
 
-camera.position.z = 5;
+
+//GLTF Loader
+let model;
+const loader = new GLTFLoader();
+loader.load( './model/scene.gltf', function ( gltf ) {  // PROPS :(url : String, onLoad : Function, onProgress : Function, onError : Function )
+    model = gltf.scene;
+    console.log(model)
+    model.castShadow = true;
+    model.receiveShadow = true;
+	  model.position.set( 0, -0.5, 0 );
+	  model.scale.set( 0.01, 0.01, 0.01 );
+	  scene.add(model);
+
+    
+
+    model.traverse(function(child) {
+
+      if (child.isMesh) {
+         child.material.wireframe = false;
+         child.material.flatSahding = false;
+      }
+    })
+
+    renderer.render(scene, camera)
+
+    animate();
+
+})
+
+// Responsiveness :
+window.onresize = function () {
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize( window.innerWidth, window.innerHeight );
+
+};
+
 
 // Animate
 const animate = function(){
   requestAnimationFrame( animate );
 
-  mesh.rotation.x += 0.01;
-  mesh.rotation.y += 0.01;
+  controls.update(); 
+
+
+  // model.rotation.x += 0.01;
+  model.rotation.y += 0.005;
+  // model.rotation.z += 0.005;
 
   renderer.render( scene, camera );
 };
-
-animate();
 
 
