@@ -38,7 +38,6 @@ document.body.appendChild( renderer.domElement );
 //Orbit controls
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.update();
-// controls.enablePan = false;
 controls.enableDamping = true;
 controls.dampingFactor = 0.25;
 controls.enableZoom = true;
@@ -91,10 +90,7 @@ const animate = function(){
 
   controls.update(); 
 
-
-  // model.rotation.x += 0.01;
   model.rotation.y += 0.005;
-  // model.rotation.z += 0.005;
 
   renderer.render( scene, camera );
 };
