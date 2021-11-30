@@ -13,16 +13,10 @@ const camera = new THREE.PerspectiveCamera(
 
 
 // Renderer
-const renderer = new THREE.WebGLRenderer({
-  // canvas: canvas,
-  // alpha: true //to make threeJS background transparent
-});
+const renderer = new THREE.WebGLRenderer();
 renderer.setSize( innerWidth, innerHeight );
+renderer.setPixelRatio(devicePixelRatio);
 document.body.appendChild( renderer.domElement );
-
-// console.log(scene)
-// console.log(camera)
-// console.log(renderer)
 
 
 // 3D Model
@@ -34,10 +28,6 @@ material.wireframe = true;
 const mesh = new THREE.Mesh( geometry, material );
 scene.add( mesh ); // adding our mesh into the scene
 
-// console.log(geometry)
-// console.log(material)
-// console.log(mesh)
-
 // Lights
 
 //Light 1
@@ -47,7 +37,7 @@ pointLight.position.y = 3
 pointLight.position.z = 4
 scene.add(pointLight)
 
-camera.position.z = 5;
+camera.position.z = 3;
 
 // Animate
 const animate = function(){
